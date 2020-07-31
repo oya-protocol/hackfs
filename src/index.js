@@ -36,7 +36,7 @@ const main = async () => {
     }
 
     // TODO - pull this from somewhere else
-    const buckets = await textile.Buckets.withKeyInfo('brqbnrvpihcdrdjh2japbkgd6mm')
+    const buckets = await textile.Buckets.withKeyInfo({key:'brqbnrvpihcdrdjh2japbkgd6mm'})
     // Authorize the user and your insecure keys with getToken
     await buckets.getToken(oya.identity)
 

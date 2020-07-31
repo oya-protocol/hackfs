@@ -53,18 +53,17 @@ const main = async () => {
       date: (new Date()).getTime(),
       paths: []
     }
-    await storeIndex(index)
+    await storeJSON('index.json', index)
     return index
   }
 
-  const storeIndex = async (index) => {
-    await oya.buckets.pushPath(oya.bucketKey, 'index.json', JSON.stringify(index, null, 2))
+  const storeJSON = async (path, index) => {
+    await oya.buckets.pushPath(oya.bucketKey, path, JSON.stringify(index, null, 2))
   }
   const upLoadMetaData = async (metaData) => {
     const now = new Date().getTime()
     metaData['timestamp'] = now
-    const metaDataAsJSON = JSON.stringify(metaData, null, 2)
-    oya.buckets.pushPath(oya.bucketKey, 'product_info.json', metaDataAsJSON)
+    storeJSON('product_info.json', metaData)
   }
 
   var oya = {};

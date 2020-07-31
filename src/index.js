@@ -40,17 +40,46 @@ const main = async () => {
     // Authorize the user and your insecure keys with getToken
     await buckets.getToken(oya.identity)
 
-    const root = await buckets.open('io.textile.dropzone')
+    const root = await buckets.open('oya.product')
     if (!root) {
       throw new Error('Failed to open bucket')
     }
     return {buckets: buckets, bucketKey: root.key};
   }
 
+  const initIndex = async () => {
+    const index = {
+      author: oya.identity.public.toString(),
+      date: (new Date()).getTime(),
+      paths: []
+    }
+    await storeIndex(index)
+    return index
+  }
+
+  const storeIndex = async (index) => {
+    await oya.buckets.pushPath(oya.bucketKey, 'index.json', JSON.stringify(index, null, 2))
+  }
+  const upLoadMetaData = async (metaData) => {
+    const now = new Date().getTime()
+    metaData['timestamp'] = now
+    const metaDataAsJSON = JSON.stringify(metaData, null, 2)
+    oya.buckets.pushPath(oya.bucketKey, 'product_info.json', metaDataAsJSON)
+  }
+
   var oya = {};
   oya.identity = await getIdentity();
-  console.log(oya.identity);
-  console.log(getBucketKey());
+  const {bucketKey, buckets} = await getBucketKey()
+  oya.buckets = buckets
+  oya.bucketKey = bucketKey
+  try {
+    const links = await buckets.links(bucketKey)
+    console.log(links)
+  } catch (e) {
+    console.log(e)
+  }
+  console.log(initIndex())
+  upLoadMetaData({fun:'times'})
 };
 main();
 

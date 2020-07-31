@@ -1,5 +1,8 @@
 // import confetti from 'canvas-confetti';
 import browserImageSize from 'browser-image-size'
+import * as FilePond from 'filepond';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 
 const main = async () => {
   const getIdentity = async () => {
@@ -71,6 +74,17 @@ const main = async () => {
   }, {});
 
   var oya = {};
+  const inputElement = document.querySelector('input[type="file"]');
+  FilePond.registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+  const pond = FilePond.create( inputElement, {
+    allowMultiple: true
+  })
+  pond.on('addfile', (error, file) => {
+      console.log('File added', file);
+  })
+  pond.on('removefile', (error, file) => {
+      console.log('File removed', file);
+  });
   oya.identity = await getIdentity();
   const {bucketKey, buckets} = await getBucketKey()
   oya.buckets = buckets
@@ -90,4 +104,3 @@ const main = async () => {
   upLoadMetaData({fun:'times'})
 };
 main();
-

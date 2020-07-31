@@ -65,12 +65,21 @@ const main = async () => {
     metaData['timestamp'] = now
     storeJSON('product_info.json', metaData)
   }
+  const formToJSON = elements => [].reduce.call(elements, (data, element) => {
+    data[element.name] = element.value;
+    return data;
+  }, {});
 
   var oya = {};
   oya.identity = await getIdentity();
   const {bucketKey, buckets} = await getBucketKey()
   oya.buckets = buckets
   oya.bucketKey = bucketKey
+  document.getElementById('product-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const data = formToJSON(this.elements);
+    console.log(data)
+  })
   try {
     const links = await buckets.links(bucketKey)
     console.log(links)

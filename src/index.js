@@ -54,7 +54,7 @@ const main = async () => {
     const details = {
       author: oya.identity.public.toString(),
       date: (new Date()).getTime(),
-      paths: oya.paths,
+      paths: oya.json.paths,
       productDetails: productDetails
     }
     await oya.buckets.pushPath(oya.bucketKey, 'index.json', JSON.stringify(details,null,2))
@@ -100,12 +100,12 @@ const main = async () => {
     pond.on('addfile', async (error, file) => {
       const fileName = `photos/${file.file.name}`
       await insertFile(file, fileName);
-      oya.paths.push(fileName)
+      oya.json.paths.push(fileName)
     })
     pond.on('removefile', async (error, file) => {
       const fileName = `photos/${file.file.name}`
       await oya.buckets.removePath(oya.bucketKey, fileName)
-      oya.paths = oya.paths.filter(path => path !== fileName)
+      oya.json.paths = oya.json.paths.filter(path => path !== fileName)
     });
     document.getElementById('product-form').addEventListener('submit', function (e) {
       e.preventDefault();
@@ -150,13 +150,16 @@ const main = async () => {
     if (oya.json.paths && oya.json.paths.length) {
       var imageHTML = ''
       for (var i = 0; i < oya.json.paths.length; i++) {
-        imageHTML += `<img src="${rootPath}/${oya.json.paths[i]}">`
+        imageHTML += `<img src="${rootPath()}/${oya.json.paths[i]}">`
       }
       document.getElementById('js-images').innerHTML = imageHTML
     }
   }
-  const loadJSON = async (path, success, error) => {
-    fetch(path+'/index.json').then(
+  const rootPath = () => {
+    return `https://${oya.bucketKey}.ipns.hub.textile.io`
+  }
+  const loadJSON = async (success, error) => {
+    fetch(rootPath()+'/index.json').then(
       response => {
         var elements = document.getElementsByClassName('loading')
         for (var i = 0; i < elements.length; i++) {
@@ -171,16 +174,17 @@ const main = async () => {
     )
   }
 
-  var oya = {};
+  var oya = {json:{paths:[]}};
   var url_hash = new URL(document.URL).hash
   if (url_hash.length > 1) {
-    const rootPath = `https://${url_hash.slice(1)}.ipns.hub.textile.io`
-    await loadJSON(rootPath, function (json) {
+    oya.bucketKey = url_hash.slice(1)
+    await loadJSON(function (json) {
       if (!json) {
         console.error('json not found')
         return
       }
       oya.json = json
+      oya.json.paths = oya.json.paths || []
       loadProduct()
     }, function () {
       console.log('Oops something went wrong :(')

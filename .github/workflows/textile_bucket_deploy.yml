@@ -1,0 +1,39 @@
+name: "Textile Bucket - Deploy"
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  bucket_push:
+    runs-on: ubuntu-latest
+    name: deploy
+    steps:
+    - uses: actions/checkout@master
+    # https://github.com/actions/setup-node#usage
+    - uses: actions/setup-node@v1
+      with:
+        node-version: "12.x"
+    - run: npm install
+    - run: npm run build
+    - name: Push to Textile Bucket
+      id: push
+      uses: textileio/github-action-buckets@master
+      with:
+        key: ${{ secrets.TEXTILE_ACCOUNT_KEY }}
+        secret: ${{ secrets.TEXTILE_ACCOUNT_SECRET }}
+        bucket: 'snowpack'
+        thread: 'bafkq6t3e2yitkpbjbvnxgjqnhxkftxhtdydggmtacjvqgliukiaewjq'
+        path: 'build'
+        # pattern: '**/*' # optional file search filter to limit which files you push to the remote bucket
+    # Use the output from the `hello` step
+    - run: echo "bucket - ${{ steps.push.outputs.key }}"
+    - run: echo "ipfs - ${{ steps.push.outputs.ipfs }}"
+    - run: echo "ipfs link - ${{ steps.push.outputs.ipfsUrl }}"
+    - run: echo "ipns - ${{ steps.push.outputs.ipns }}"
+    - run: echo "ipns link - ${{ steps.push.outputs.ipnsUrl }}"
+    - run: echo "hub - ${{ steps.push.outputs.hub }}"
+    - run: echo "www - ${{ steps.push.outputs.www }}"

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OYA - Add a product</title>
+  <title>OYA - product</title>
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/oya.css" rel="stylesheet" type="text/css">
@@ -16,7 +16,9 @@
 <body class="body-big">
   <div class="containter-page-content w-container">
     <div class="div-setion-heading">
-      <h2 class="heading-2-page-head">Add Product</h2>
+      <h2 class="heading-2-page-head loading">Loading...</h2>
+      <h2 class="heading-2-page-head hidden addProduct">Add Product</h2>
+      <h2 class="heading-2-page-head hidden editProduct">Edit Product</h2>
     </div>
     <div class="w-form">
       <form id="product-form" name="email-form" data-name="Email Form" class="form w-clearfix">
@@ -29,7 +31,7 @@
 </div>
         </div>
         <div class="product-detail">
-          <h3 class="heading-4">Shipping Detail</h3><label class="w-checkbox checkbox-field"><input type="checkbox" id="checkbox" name="checkbox" data-name="Checkbox" class="w-checkbox-input"><span class="checkbox-label w-form-label">This is a physical product</span></label><label for="shipping-price" class="field-label">Shipping Price</label><input id="shipping-price" class="text-field-2 w-input" name="shipping-price" data-name="Shipping Price" required=""  type="number"><label for="Zipcode" class="field-label">Origin zip code</label><input type="text" class="text-field-2 w-input" maxlength="256" name="Zipcode" data-name="Zipcode" placeholder="12345" id="Zipcode"><label for="processing-time" class="field-label">Processing time</label><select id="processing-time" name="processing-time" data-name="Processing time" class="select-field w-select"><option value="">Selecting your processing time...</option><option>1-3 business day</option><option>4-5 business day</option><option>1-2 weeks</option><option>3 weeks or more</option><option>varies</option></select></div>
+          <h3 class="heading-4">Shipping Detail</h3><label class="w-checkbox checkbox-field"><input type="checkbox" id="physical-product" name="physical-product" data-name="Checkbox" class="w-checkbox-input"><span class="checkbox-label w-form-label">This is a physical product</span></label><label for="shipping-price" class="field-label">Shipping Price</label><input id="shipping-price" class="text-field-2 w-input" name="shipping-price" data-name="Shipping Price" required=""  type="number"><label for="Zipcode" class="field-label">Origin zip code</label><input type="text" class="text-field-2 w-input" maxlength="256" name="Zipcode" data-name="Zipcode" placeholder="12345" id="Zipcode"><label for="processing-time" class="field-label">Processing time</label><select id="processing-time" name="processing-time" data-name="Processing time" class="select-field w-select"><option value="">Selecting your processing time...</option><option value="1-3 business days">1-3 business days</option><option value="4-5 business days">4-5 business days</option><option value="1-2 weeks">1-2 weeks</option value=""><option value="3 weeks or more">3 weeks or more</option><option value="varies">varies</option></select></div>
         <div class="div-block-4"><input type="submit" value="Submit" data-wait="Please wait..." class="submit-button w-button"></div>
       </form>
       <div class="w-form-done">

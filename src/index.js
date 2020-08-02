@@ -50,40 +50,62 @@ const main = async () => {
     return {buckets: buckets, bucketKey: root.key};
   }
 
-  const initIndex = async () => {
-    const index = {
+  const upLoadMetaData = async (productDetails) => {
+    const details = {
       author: oya.identity.public.toString(),
       date: (new Date()).getTime(),
-      paths: []
+      paths: oya.paths,
+      productDetails: productDetails
     }
-    await storeJSON('index.json', index)
-    return index
-  }
-
-  const storeJSON = async (path, index) => {
-    await oya.buckets.pushPath(oya.bucketKey, path, JSON.stringify(index, null, 2))
-  }
-  const upLoadMetaData = async (metaData) => {
-    const now = new Date().getTime()
-    metaData['timestamp'] = now
-    storeJSON('product_info.json', metaData)
+    await oya.buckets.pushPath(oya.bucketKey, 'index.json', JSON.stringify(details,null,2))
   }
   const formToJSON = elements => [].reduce.call(elements, (data, element) => {
-    data[element.name] = element.value;
+    if (element.name.length && element.value.length) {
+      data[element.name] = element.type == "checkbox" ? element.checked : element.value;
+    }
     return data;
   }, {});
+  /**
+   * Pushes files to the bucket
+   * @param file 
+   * @param path 
+   */
+  const insertFile = async (file, path) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onabort = () => reject('file reading was aborted')
+      reader.onerror = () => reject('file reading has failed')
+      reader.onload = () => {
+      // Do whatever you want with the file contents
+        const binaryStr = reader.result
 
-  var oya = {};
+        if (!oya.buckets || !oya.bucketKey) {
+          reject('No bucket client or root key')
+          return
+        }
+        oya.buckets.pushPath(oya.bucketKey, path, binaryStr).then((raw) => {
+          resolve(raw)
+        })
+      }
+      reader.readAsArrayBuffer(file.file)
+    })
+  }
+
+  var oya = {paths:[]};
   const inputElement = document.querySelector('input[type="file"]');
   FilePond.registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
   const pond = FilePond.create( inputElement, {
     allowMultiple: true
   })
-  pond.on('addfile', (error, file) => {
-      console.log('File added', file);
+  pond.on('addfile', async (error, file) => {
+    const fileName = `photos/${file.file.name}`
+    await insertFile(file, fileName);
+    oya.paths.push(fileName)
   })
-  pond.on('removefile', (error, file) => {
-      console.log('File removed', file);
+  pond.on('removefile', async (error, file) => {
+    const fileName = `photos/${file.file.name}`
+    await oya.buckets.removePath(oya.bucketKey, fileName)
+    oya.paths = oya.paths.filter(path => path !== fileName)
   });
   oya.identity = await getIdentity();
   const {bucketKey, buckets} = await getBucketKey()
@@ -92,15 +114,41 @@ const main = async () => {
   document.getElementById('product-form').addEventListener('submit', function (e) {
     e.preventDefault();
     const data = formToJSON(this.elements);
-    console.log(data)
+    upLoadMetaData(data)
   })
-  try {
-    const links = await buckets.links(bucketKey)
-    console.log(links)
-  } catch (e) {
-    console.log(e)
-  }
-  console.log(initIndex())
-  upLoadMetaData({fun:'times'})
+  oya.links = await buckets.links(bucketKey).catch(error => {
+    console.error('Error Caught - set up retry logic:', error);
+  })
+  fetch(oya.links.ipns+'/index.json').then(
+    response => {
+      var elements = document.getElementsByClassName('loading')
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].classList.add('hidden')
+      }
+      if (response.ok) {
+        response.json().then(json => {
+          var elements = document.getElementsByClassName('editProduct')
+          for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove('hidden')
+          }
+          for (let [name, value] of Object.entries(json.productDetails)) {
+            var inputs = document.getElementsByName(name);
+            for (var i = 0; i < inputs.length; i++) {
+              if (inputs[i].type == "checkbox") {
+                inputs[i].checked = value;
+              } else {
+                inputs[i].value = value
+              }
+            }
+          }
+        })
+      } else {
+        var elements = document.getElementsByClassName('addProduct')
+        for (var i = 0; i < elements.length; i++) {
+          elements[i].classList.remove('hidden')
+        }
+      }
+    }
+  )
 };
 main();

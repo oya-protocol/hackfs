@@ -1,3 +1,7 @@
+.hidden {
+  display:none;
+}
+
 .w-pagination-wrapper {
   display: flex;
   flex-wrap: wrap;

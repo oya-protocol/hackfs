@@ -58,6 +58,7 @@ const main = async () => {
       productDetails: productDetails
     }
     await oya.buckets.pushPath(oya.bucketKey, 'index.json', JSON.stringify(details,null,2))
+    oya.json = details
   }
   const formToJSON = elements => [].reduce.call(elements, (data, element) => {
     if (element.name.length && element.value.length) {
@@ -109,8 +110,12 @@ const main = async () => {
     document.getElementById('product-form').addEventListener('submit', function (e) {
       e.preventDefault();
       const data = formToJSON(this.elements);
-      upLoadMetaData(data)
-      console.log(oya.links)
+      upLoadMetaData(data).then(function () {
+        window.location.hash = '#'+oya.bucketKey;
+        document.getElementById("js-edit-details").classList.add('hidden')
+        loadProduct()
+        document.getElementById("js-product-details").classList.remove('hidden')
+      })
     })
   }
   const loadIdentity = async () => {
@@ -121,6 +126,34 @@ const main = async () => {
     oya.links = await buckets.links(bucketKey).catch(error => {
       console.error('Error Caught - set up retry logic:', error);
     })
+  }
+  const loadProduct = () => {
+    var details = oya.json.productDetails
+    if (!details) {
+      console.error('productDetails not found')
+      return
+    }
+    document.getElementById("js-extra-details").innerHTML = ''
+    for (let [name, value] of Object.entries(details)) {
+      var elements = document.getElementsByClassName(`js-details-${name}`)
+      if (elements.length) {
+        for (var i = 0; i < elements.length; i++) {
+          elements[i].innerHTML = value // TODO - ONLY DO TEXT!!
+        }
+      } else {
+        var listItem = document.createElement("LI");
+        // TODO - is this safe from script injection?
+        listItem.appendChild(document.createTextNode(`${name}: ${value}`));
+        document.getElementById("js-extra-details").appendChild(listItem)
+      }
+    }
+    if (oya.json.paths && oya.json.paths.length) {
+      var imageHTML = ''
+      for (var i = 0; i < oya.json.paths.length; i++) {
+        imageHTML += `<img src="${rootPath}/${oya.json.paths[i]}">`
+      }
+      document.getElementById('js-images').innerHTML = imageHTML
+    }
   }
   const loadJSON = async (path, success, error) => {
     fetch(path+'/index.json').then(
@@ -148,31 +181,7 @@ const main = async () => {
         return
       }
       oya.json = json
-      var details = json.productDetails
-      if (!details) {
-        console.error('productDetails not found')
-        return
-      }
-      for (let [name, value] of Object.entries(json.productDetails)) {
-        var elements = document.getElementsByClassName(`js-details-${name}`)
-        if (elements.length) {
-          for (var i = 0; i < elements.length; i++) {
-            elements[i].innerHTML = value // TODO - ONLY DO TEXT!!
-          }
-        } else {
-          var listItem = document.createElement("LI");
-          // TODO - is this safe from script injection?
-          listItem.appendChild(document.createTextNode(`${name}: ${value}`));
-          document.getElementById("js-extra-details").appendChild(listItem)
-        }
-      }
-      if (json.paths && json.paths.length) {
-        var imageHTML = ''
-        for (var i = 0; i < json.paths.length; i++) {
-          imageHTML += `<img src="${rootPath}/${json.paths[i]}">`
-        }
-        document.getElementById('js-images').innerHTML = imageHTML
-      }
+      loadProduct()
     }, function () {
       console.log('Oops something went wrong :(')
     })
@@ -204,6 +213,7 @@ const main = async () => {
       }
     }
     document.getElementById("js-edit-details").classList.remove('hidden')
+    loadIdentity()
   })
   var elements = document.getElementsByClassName('loading')
   for (var i = 0; i < elements.length; i++) {

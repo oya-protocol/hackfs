@@ -1,4 +1,4 @@
-.hidden {
+.hidden, .show-after-loaded {
   display:none;
 }
 

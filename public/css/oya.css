@@ -2228,7 +2228,6 @@ label {
   position: static;
   top: 0px;
   display: block;
-  max-width: 1440vw;
   margin-top: 200px;
   grid-auto-columns: 1fr;
   grid-column-gap: 127px;

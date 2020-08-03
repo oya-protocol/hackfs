@@ -123,6 +123,7 @@ const main = async () => {
         window.location.hash = '#'+oya.bucketKey;
         document.getElementById("js-edit-details").classList.add('hidden')
         loadProduct()
+        console.log( textile.Buckets.archive(oya.bucketKey))
         document.getElementById("js-product-details").classList.remove('hidden')
       })
     })

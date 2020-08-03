@@ -61,7 +61,7 @@ const main = async () => {
     oya.json = details
   }
   const formToJSON = elements => [].reduce.call(elements, (data, element) => {
-    if (element.name.length && element.value.length) {
+    if (element.name.length && element.value.length && element.name != 'filepond') {
       data[element.name] = element.type == "checkbox" ? element.checked : element.value;
     }
     return data;
@@ -233,8 +233,8 @@ const main = async () => {
     elements[i].classList.add('hidden')
   }
   var elements = document.getElementsByClassName('show-after-loaded')
-  for (var i = 0; i < elements.length; i++) {
-    elements[i].classList.remove('show-after-loaded')
+  for (var i = elements.length; i > 0 ; i--) {
+    elements[0].classList.remove('show-after-loaded')
   }
 };
 main();

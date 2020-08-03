@@ -92,20 +92,29 @@ const main = async () => {
     })
   }
   const loadFormInterface = async () => {
+    var files = []
+    if (oya.json && oya.json.paths && oya.json.paths.length) {
+      files = oya.json.paths.map(function (pathName) {
+        pathName = pathName.split('/').pop()
+        return {options:{type:'local',file:{name:pathName}}}
+      })
+    }
     const inputElement = document.querySelector('input[type="file"]');
     FilePond.registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
     const pond = FilePond.create( inputElement, {
-      allowMultiple: true
+      maxFiles:1, files:files
     })
     pond.on('addfile', async (error, file) => {
       const fileName = `photos/${file.file.name}`
-      await insertFile(file, fileName);
-      oya.json.paths.push(fileName)
+      if (!oya.json.paths.includes(fileName)) {
+        await insertFile(file, fileName);
+        oya.json.paths.push(fileName)
+      }
     })
     pond.on('removefile', async (error, file) => {
       const fileName = `photos/${file.file.name}`
-      await oya.buckets.removePath(oya.bucketKey, fileName)
       oya.json.paths = oya.json.paths.filter(path => path !== fileName)
+      oya.buckets.removePath(oya.bucketKey, fileName)
     });
     document.getElementById('product-form').addEventListener('submit', function (e) {
       e.preventDefault();
@@ -147,13 +156,13 @@ const main = async () => {
         document.getElementById("js-extra-details").appendChild(listItem)
       }
     }
-    if (oya.json.paths && oya.json.paths.length) {
-      var imageHTML = ''
+    var imageHTML = ''
+    if (oya.json.paths) {
       for (var i = 0; i < oya.json.paths.length; i++) {
         imageHTML += `<img src="${rootPath()}/${oya.json.paths[i]}">`
       }
-      document.getElementById('js-images').innerHTML = imageHTML
     }
+    document.getElementById('js-images').innerHTML = imageHTML
   }
   const rootPath = () => {
     return `https://${oya.bucketKey}.ipns.hub.textile.io`
@@ -187,7 +196,7 @@ const main = async () => {
       oya.json.paths = oya.json.paths || []
       loadProduct()
     }, function () {
-      console.log('Oops something went wrong :(')
+      console.error('Oops something went wrong w/ loadJSON :(')
     })
   } else {
     document.getElementById("js-product-details").classList.add('hidden')

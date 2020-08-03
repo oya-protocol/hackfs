@@ -5,6 +5,7 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 
 const main = async () => {
+  const HUB_API = `http://hub.next.textile.io:3007`
   const getIdentity = async () => {
     try {
       var storedIdent = localStorage.getItem("identity");
@@ -39,7 +40,7 @@ const main = async () => {
     }
 
     // TODO - pull this from somewhere else
-    const buckets = await textile.Buckets.withKeyInfo({key:'brqbnrvpihcdrdjh2japbkgd6mm'})
+    const buckets = await textile.Buckets.withKeyInfo({key:'brnyrzoniaaxmk27bgqe5synqq4'}, HUB_API)
     // Authorize the user and your insecure keys with getToken
     await buckets.getToken(oya.identity)
 
@@ -68,8 +69,8 @@ const main = async () => {
   }, {});
   /**
    * Pushes files to the bucket
-   * @param file 
-   * @param path 
+   * @param file
+   * @param path
    */
   const insertFile = async (file, path) => {
     return new Promise((resolve, reject) => {
@@ -123,7 +124,7 @@ const main = async () => {
         window.location.hash = '#'+oya.bucketKey;
         document.getElementById("js-edit-details").classList.add('hidden')
         loadProduct()
-        console.log( textile.Buckets.archive(oya.bucketKey))
+        console.log( oya.buckets.archive(oya.bucketKey))
         document.getElementById("js-product-details").classList.remove('hidden')
       })
     })

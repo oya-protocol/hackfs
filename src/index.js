@@ -5,7 +5,6 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 
 const main = async () => {
-  const HUB_API = `https://grpcweb.hub.next.textile.io`
   const getIdentity = async () => {
     try {
       var storedIdent = localStorage.getItem("identity");
@@ -39,8 +38,11 @@ const main = async () => {
       throw new Error('Identity not set')
     }
 
-    // TODO - pull this from somewhere else
-    const buckets = await textile.Buckets.withKeyInfo({key:'brnyrzoniaaxmk27bgqe5synqq4'}, HUB_API)
+    // TODO - pull this from somewhere else - this is the regular hub key
+    const buckets = await textile.Buckets.withKeyInfo({key:'brqbnrvpihcdrdjh2japbkgd6mm'})
+
+    // When hub.next is working, use the API endpoint below w/ the hub.next key below
+    // const buckets = await textile.Buckets.withKeyInfo({key:'brnyrzoniaaxmk27bgqe5synqq4'}, 'https://grpcweb.hub.next.textile.io')
     // Authorize the user and your insecure keys with getToken
     await buckets.getToken(oya.identity)
 
@@ -124,7 +126,8 @@ const main = async () => {
         window.location.hash = '#'+oya.bucketKey;
         document.getElementById("js-edit-details").classList.add('hidden')
         loadProduct()
-        console.log( oya.buckets.archive(oya.bucketKey))
+        // TODO - set this up when textile gets things working
+        // console.log( oya.buckets.archive(oya.bucketKey))
         document.getElementById("js-product-details").classList.remove('hidden')
       })
     })
@@ -168,7 +171,7 @@ const main = async () => {
     document.getElementById('js-images').innerHTML = imageHTML
   }
   const rootPath = () => {
-    return `http://bafkqleleurhtotczj6ue3wcksghwhj3454re6haufiwxsjfwpx7swga.thread.hub.next.textile.io/buckets/${oya.bucketKey}`
+    return `https://${oya.bucketKey}.ipns.hub.textile.io`
   }
   const loadJSON = async (success, error) => {
     fetch(rootPath()+'/index.json').then(

@@ -5,7 +5,7 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 
 const main = async () => {
-  const HUB_API = `http://hub.next.textile.io:3007`
+  const HUB_API = `https://grpcweb.hub.next.textile.io`
   const getIdentity = async () => {
     try {
       var storedIdent = localStorage.getItem("identity");

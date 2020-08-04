@@ -11,6 +11,7 @@
     "browser-image-resizer": "^2.1.0",
     "browser-image-size": "^1.1.0",
     "canvas-confetti": "^1.2.0",
+    "ethers": "^5.0.7",
     "filepond": "^4.19.2",
     "filepond-plugin-image-exif-orientation": "^1.0.9",
     "filepond-plugin-image-preview": "^4.6.4"

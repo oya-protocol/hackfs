@@ -137,6 +137,7 @@ const main = async () => {
     oya.links = await buckets.links(bucketKey).catch(error => {
       console.error('Error Caught - set up retry logic:', error);
     })
+    console.log(oya.links)
   }
   const loadProduct = () => {
     var details = oya.json.productDetails
@@ -167,7 +168,7 @@ const main = async () => {
     document.getElementById('js-images').innerHTML = imageHTML
   }
   const rootPath = () => {
-    return `https://${oya.bucketKey}.ipns.hub.textile.io`
+    return `http://bafkqleleurhtotczj6ue3wcksghwhj3454re6haufiwxsjfwpx7swga.thread.hub.next.textile.io/buckets/${oya.bucketKey}`
   }
   const loadJSON = async (success, error) => {
     fetch(rootPath()+'/index.json').then(

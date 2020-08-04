@@ -1,11 +1,5 @@
 name: "Textile Bucket - Deploy"
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   bucket_push:
@@ -25,7 +19,7 @@ jobs:
       with:
         key: ${{ secrets.TEXTILE_ACCOUNT_KEY }}
         secret: ${{ secrets.TEXTILE_ACCOUNT_SECRET }}
-        bucket: 'snowpack'
+        bucket: ${GITHUB_REF##*/}
         thread: 'bafkq6t3e2yitkpbjbvnxgjqnhxkftxhtdydggmtacjvqgliukiaewjq'
         path: 'build'
         # pattern: '**/*' # optional file search filter to limit which files you push to the remote bucket

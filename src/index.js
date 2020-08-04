@@ -5,6 +5,7 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 
 const main = async () => {
+  const HUB_API = `http://hub.next.textile.io:3007`
   const getIdentity = async () => {
     try {
       var storedIdent = localStorage.getItem("identity");
@@ -39,7 +40,7 @@ const main = async () => {
     }
 
     // TODO - pull this from somewhere else
-    const buckets = await textile.Buckets.withKeyInfo({key:'brqbnrvpihcdrdjh2japbkgd6mm'})
+    const buckets = await textile.Buckets.withKeyInfo({key:'brnyrzoniaaxmk27bgqe5synqq4'}, HUB_API)
     // Authorize the user and your insecure keys with getToken
     await buckets.getToken(oya.identity)
 
@@ -61,15 +62,15 @@ const main = async () => {
     oya.json = details
   }
   const formToJSON = elements => [].reduce.call(elements, (data, element) => {
-    if (element.name.length && element.value.length) {
+    if (element.name.length && element.value.length && element.name != 'filepond') {
       data[element.name] = element.type == "checkbox" ? element.checked : element.value;
     }
     return data;
   }, {});
   /**
    * Pushes files to the bucket
-   * @param file 
-   * @param path 
+   * @param file
+   * @param path
    */
   const insertFile = async (file, path) => {
     return new Promise((resolve, reject) => {
@@ -92,20 +93,29 @@ const main = async () => {
     })
   }
   const loadFormInterface = async () => {
+    var files = []
+    if (oya.json && oya.json.paths && oya.json.paths.length) {
+      files = oya.json.paths.map(function (pathName) {
+        pathName = pathName.split('/').pop()
+        return {options:{type:'local',file:{name:pathName}}}
+      })
+    }
     const inputElement = document.querySelector('input[type="file"]');
     FilePond.registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
     const pond = FilePond.create( inputElement, {
-      allowMultiple: true
+      maxFiles:1, files:files
     })
     pond.on('addfile', async (error, file) => {
       const fileName = `photos/${file.file.name}`
-      await insertFile(file, fileName);
-      oya.json.paths.push(fileName)
+      if (!oya.json.paths.includes(fileName)) {
+        await insertFile(file, fileName);
+        oya.json.paths.push(fileName)
+      }
     })
     pond.on('removefile', async (error, file) => {
       const fileName = `photos/${file.file.name}`
-      await oya.buckets.removePath(oya.bucketKey, fileName)
       oya.json.paths = oya.json.paths.filter(path => path !== fileName)
+      oya.buckets.removePath(oya.bucketKey, fileName)
     });
     document.getElementById('product-form').addEventListener('submit', function (e) {
       e.preventDefault();
@@ -114,6 +124,7 @@ const main = async () => {
         window.location.hash = '#'+oya.bucketKey;
         document.getElementById("js-edit-details").classList.add('hidden')
         loadProduct()
+        console.log( oya.buckets.archive(oya.bucketKey))
         document.getElementById("js-product-details").classList.remove('hidden')
       })
     })
@@ -126,6 +137,7 @@ const main = async () => {
     oya.links = await buckets.links(bucketKey).catch(error => {
       console.error('Error Caught - set up retry logic:', error);
     })
+    console.log(oya.links)
   }
   const loadProduct = () => {
     var details = oya.json.productDetails
@@ -147,16 +159,16 @@ const main = async () => {
         document.getElementById("js-extra-details").appendChild(listItem)
       }
     }
-    if (oya.json.paths && oya.json.paths.length) {
-      var imageHTML = ''
+    var imageHTML = ''
+    if (oya.json.paths) {
       for (var i = 0; i < oya.json.paths.length; i++) {
         imageHTML += `<img src="${rootPath()}/${oya.json.paths[i]}">`
       }
-      document.getElementById('js-images').innerHTML = imageHTML
     }
+    document.getElementById('js-images').innerHTML = imageHTML
   }
   const rootPath = () => {
-    return `https://${oya.bucketKey}.ipns.hub.textile.io`
+    return `http://bafkqleleurhtotczj6ue3wcksghwhj3454re6haufiwxsjfwpx7swga.thread.hub.next.textile.io/buckets/${oya.bucketKey}`
   }
   const loadJSON = async (success, error) => {
     fetch(rootPath()+'/index.json').then(
@@ -187,7 +199,7 @@ const main = async () => {
       oya.json.paths = oya.json.paths || []
       loadProduct()
     }, function () {
-      console.log('Oops something went wrong :(')
+      console.error('Oops something went wrong w/ loadJSON :(')
     })
   } else {
     document.getElementById("js-product-details").classList.add('hidden')
@@ -224,8 +236,8 @@ const main = async () => {
     elements[i].classList.add('hidden')
   }
   var elements = document.getElementsByClassName('show-after-loaded')
-  for (var i = 0; i < elements.length; i++) {
-    elements[i].classList.remove('show-after-loaded')
+  for (var i = elements.length; i > 0 ; i--) {
+    elements[0].classList.remove('show-after-loaded')
   }
 };
 main();

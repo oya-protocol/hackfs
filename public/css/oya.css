@@ -3348,15 +3348,11 @@ label {
   align-self: center;
 }
 
-#w-node-e205ec57d4bc-d7d16cbb {
+.full-width {
   -ms-grid-column-span: 2;
   grid-column-end: 3;
   -ms-grid-column: 1;
   grid-column-start: 1;
-  -ms-grid-row-span: 1;
-  grid-row-end: 5;
-  -ms-grid-row: 4;
-  grid-row-start: 4;
 }
 
 @media screen and (max-width: 991px) {

@@ -125,8 +125,14 @@ const main = async () => {
       oya.json.paths = oya.json.paths.filter(path => path.name !== fileName)
       oya.buckets.removePath(oya.bucketKey, `photos/${fileName}`)
     });
+    document.getElementById('cancel-button').addEventListener('click', function (e) {
+      document.getElementById("js-edit-details").classList.add('hidden')
+      loadProduct()
+      document.getElementById("js-product-details").classList.remove('hidden')
+    })
     document.getElementById('product-form').addEventListener('submit', function (e) {
       e.preventDefault();
+      document.getElementById('submit-form-button').value = 'Loading...'
       const data = formToJSON(this.elements);
       upLoadMetaData(data).then(function () {
         window.location.hash = `#${oya.bucketKey}/${oya.json_cid}`
@@ -137,6 +143,7 @@ const main = async () => {
         for (var i = 0; i < elements.length; i++) {
           elements[i].classList.add('hidden')
         }
+        document.getElementById('submit-form-button').value = 'Submit'
       })
     })
   }
@@ -214,9 +221,11 @@ const main = async () => {
     }, function () {
       console.error('Oops something went wrong w/ loadJSON :(')
     })
-  } else {
+
+  } else { // Adding new product listing
     document.getElementById("js-product-details").classList.add('hidden')
     loadFormInterface()
+    document.getElementById('submit-form-button').value = 'Preview'
     document.getElementById("js-edit-details").classList.remove('hidden')
     var elements = document.getElementsByClassName('addProduct')
     for (var i = 0; i < elements.length; i++) {

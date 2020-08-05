@@ -4,6 +4,9 @@ import * as FilePond from 'filepond';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 
+        // TODO - set this up when textile gets things working
+        // console.log( oya.buckets.archive(oya.bucketKey))
+
 const main = async () => {
   const getIdentity = async () => {
     try {
@@ -129,9 +132,11 @@ const main = async () => {
         window.location.hash = `#${oya.bucketKey}/${oya.json_cid}`
         document.getElementById("js-edit-details").classList.add('hidden')
         loadProduct()
-        // TODO - set this up when textile gets things working
-        // console.log( oya.buckets.archive(oya.bucketKey))
         document.getElementById("js-product-details").classList.remove('hidden')
+        var elements = document.getElementsByClassName('addProduct')
+        for (var i = 0; i < elements.length; i++) {
+          elements[i].classList.add('hidden')
+        }
       })
     })
   }

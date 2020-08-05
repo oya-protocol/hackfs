@@ -12,3 +12,11 @@
   width: 540px;
   height: 540px;
 }
+
+#seller-address {
+  padding-top: 14px;
+}
+
+#js-extra-details li {
+  list-style-type: none;
+}

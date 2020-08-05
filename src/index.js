@@ -3,57 +3,39 @@
 import * as FilePond from 'filepond';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import { ethers } from "ethers";
 
         // TODO - set this up when textile gets things working
         // console.log( oya.buckets.archive(oya.bucketKey))
 
 const main = async () => {
-  const getIdentity = async () => {
-    try {
-      var storedIdent = localStorage.getItem("identity");
-      if (storedIdent === null) {
-        throw new Error("No identity");
-      }
-      const restored = threads.Libp2pCryptoIdentity.fromString(storedIdent);
-      return restored;
+  const getEthAddress = () => {
+    if (typeof web3 === 'undefined') {
+      return
     }
-    catch (e) {
-      /**
-       * If any error, create a new identity.
-       */
-      try {
-        const identity = await threads.Libp2pCryptoIdentity.fromRandom();
-        const identityString = identity.toString();
-        localStorage.setItem("identity", identityString);
-        return identity;
-      } catch (err) {
-        return err.message;
-      }
-    }
+    oya.provider = new ethers.providers.Web3Provider(web3.currentProvider);
+    return oya.provider.provider.selectedAddress
   };
 
   /**
    * getBuckets will create a new Buckets client with the UserAuth
    */
   const getBuckets = async () => {
-    if (!oya.identity) {
-      throw new Error('Identity not set')
-    }
-
     // TODO - pull this from somewhere else - this is the regular hub key
     const buckets = await textile.Buckets.withKeyInfo({key:'brqbnrvpihcdrdjh2japbkgd6mm'})
 
     // When hub.next is working, use the API endpoint below w/ the hub.next key below
     // const buckets = await textile.Buckets.withKeyInfo({key:'brnyrzoniaaxmk27bgqe5synqq4'}, 'https://grpcweb.hub.next.textile.io')
     // Authorize the user and your insecure keys with getToken
-    await buckets.getToken(oya.identity)
+    const identity = await threads.Libp2pCryptoIdentity.fromString('bbaareyccr6d67bras2r423xi3dkv4zj7ojijhxql7k3ljsxprrfiwcigs5xjbfwytt7vipbkiycztkl2shjs2xcbzy4jxyhdfciioq532b3ai3uqs3mjz72uhqvembmzvf5jduznlra44oe34drsreehio55a5qe')
+    await buckets.getToken(identity)
 
     return buckets
   }
 
   const upLoadMetaData = async (productDetails) => {
     const details = {
-      author: oya.identity.public.toString(),
+      author: oya.eth_address,
       date: (new Date()).getTime(),
       paths: oya.json.paths,
       productDetails: productDetails
@@ -135,7 +117,7 @@ const main = async () => {
       document.getElementById('submit-form-button').value = 'Loading...'
       const data = formToJSON(this.elements);
       upLoadMetaData(data).then(function () {
-        window.location.hash = `#${oya.bucketKey}/${oya.json_cid}`
+        window.location.hash = `#${oya.bucketKey}`
         hide("#js-edit-details")
         loadProduct()
         show("#js-product-details")
@@ -180,7 +162,7 @@ const main = async () => {
         elements[i].innerHTML = new Date(oya.json.date)
       }
     }
-    if (oya.identity.public.toString() == oya.json.author) {
+    if (oya.eth_address == oya.json.author) {
       show('.can-edit')
     } else {
       show('.can-buy')
@@ -228,7 +210,6 @@ const main = async () => {
   }
 
   var oya = {json:{paths:[]}};
-  oya.identity = await getIdentity();
   oya.buckets = await getBuckets()
   var url_hash = new URL(document.URL).hash
   const queryString = window.location.search;
@@ -254,10 +235,23 @@ const main = async () => {
 
   } else { // Adding new product listing
     hide("#js-product-details")
-    loadFormInterface()
-    document.getElementById('submit-form-button').value = 'Preview'
-    show("#js-edit-details")
-    show(".addProduct")
+    oya.eth_address = getEthAddress()
+    if (oya.eth_address) {
+      loadFormInterface()
+      document.getElementById('submit-form-button').value = 'Preview'
+      show("#js-edit-details")
+      show(".addProduct")
+    } else {
+      if (typeof web3 === 'undefined') {
+        show("#js-install-metamask")
+      } else {
+        document.getElementById('enable-metamask').addEventListener('click', async function (e) {
+          await oya.provider.provider.request({ method: 'eth_requestAccounts' });
+          location.reload()
+        })
+        show("#js-enable-metamask")
+      }
+    }
   }
   document.getElementById("edit-product").addEventListener('click', function (e) {
     hide("#js-product-details")

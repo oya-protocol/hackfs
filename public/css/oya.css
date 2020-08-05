@@ -2225,6 +2225,7 @@ label {
 }
 
 .containter-page-content {
+  padding: 0 30px;
   position: static;
   top: 0px;
   display: block;

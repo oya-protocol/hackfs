@@ -126,9 +126,9 @@ const main = async () => {
       oya.buckets.removePath(oya.bucketKey, `photos/${fileName}`)
     });
     document.getElementById('cancel-button').addEventListener('click', function (e) {
-      document.getElementById("js-edit-details").classList.add('hidden')
+      hide("#js-edit-details")
       loadProduct()
-      document.getElementById("js-product-details").classList.remove('hidden')
+      show("#js-product-details")
     })
     document.getElementById('product-form').addEventListener('submit', function (e) {
       e.preventDefault();
@@ -136,13 +136,10 @@ const main = async () => {
       const data = formToJSON(this.elements);
       upLoadMetaData(data).then(function () {
         window.location.hash = `#${oya.bucketKey}/${oya.json_cid}`
-        document.getElementById("js-edit-details").classList.add('hidden')
+        hide("#js-edit-details")
         loadProduct()
-        document.getElementById("js-product-details").classList.remove('hidden')
-        var elements = document.getElementsByClassName('addProduct')
-        for (var i = 0; i < elements.length; i++) {
-          elements[i].classList.add('hidden')
-        }
+        show("#js-product-details")
+        hide('.addProduct')
         document.getElementById('submit-form-button').value = 'Submit'
       })
     })
@@ -153,6 +150,16 @@ const main = async () => {
       console.error('productDetails not found')
       return
     }
+    // Update image
+    var imageHTML = ''
+    if (oya.json.paths) {
+      for (var i = 0; i < oya.json.paths.length; i++) {
+        imageHTML += `<img src="https://${oya.json.paths[i].cid}.ipfs.hub.textile.io/">`
+      }
+    }
+    document.getElementById('js-images').innerHTML = imageHTML;
+
+    // Update product details & js-extra-details
     document.getElementById("js-extra-details").innerHTML = ''
     for (let [name, value] of Object.entries(details)) {
       var elements = document.getElementsByClassName(`js-details-${name}`)
@@ -173,21 +180,16 @@ const main = async () => {
         elements[i].innerHTML = new Date(oya.json.date)
       }
     }
-    var imageHTML = ''
-    if (oya.json.paths) {
-      for (var i = 0; i < oya.json.paths.length; i++) {
-        imageHTML += `<img src="https://${oya.json.paths[i].cid}.ipfs.hub.textile.io/">`
-      }
+    if (oya.identity.public.toString() == oya.json.author) {
+      show('.can-edit')
+    } else {
+      show('.can-buy')
     }
-    document.getElementById('js-images').innerHTML = imageHTML
   }
   const loadJSON = async (success, error) => {
     fetch(`https://${oya.json_cid}.ipfs.hub.textile.io`).then(
       response => {
-        var elements = document.getElementsByClassName('loading')
-        for (var i = 0; i < elements.length; i++) {
-          elements[i].classList.add('hidden')
-        }
+        hide('.loading')
         if (response.ok) {
           response.json().then(success)
         } else {
@@ -195,6 +197,34 @@ const main = async () => {
         }
       }
     )
+  }
+  const show = (identifier) => {
+    var elements = getElements(identifier);
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].classList.remove('hidden')
+    }
+  }
+  const hide = (identifier) => {
+    var elements = getElements(identifier);
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].classList.add('hidden')
+    }
+  }
+  const getElements = (identifier) => {
+    const idOrClass = identifier[0];
+    identifier = identifier.slice(1); // trim off first char
+    if (idOrClass == '.') {
+      return document.getElementsByClassName(identifier);
+    } else if (idOrClass == '#') {
+      var element = document.getElementById(identifier);
+      if (element) {
+        return [element]
+      } else {
+        return []
+      }
+    } else {
+      throw('Unexpected start of identifier.  Should be "." or "#"')
+    }
   }
 
   var oya = {json:{paths:[]}};
@@ -223,21 +253,15 @@ const main = async () => {
     })
 
   } else { // Adding new product listing
-    document.getElementById("js-product-details").classList.add('hidden')
+    hide("#js-product-details")
     loadFormInterface()
     document.getElementById('submit-form-button').value = 'Preview'
-    document.getElementById("js-edit-details").classList.remove('hidden')
-    var elements = document.getElementsByClassName('addProduct')
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].classList.remove('hidden')
-    }
+    show("#js-edit-details")
+    show(".addProduct")
   }
   document.getElementById("edit-product").addEventListener('click', function (e) {
-    document.getElementById("js-product-details").classList.add('hidden')
-    var elements = document.getElementsByClassName('editProduct')
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].classList.remove('hidden')
-    }
+    hide("#js-product-details")
+    show('.editProduct')
     for (let [name, value] of Object.entries(oya.json.productDetails)) {
       var inputs = document.getElementsByName(name);
       for (var i = 0; i < inputs.length; i++) {
@@ -248,12 +272,9 @@ const main = async () => {
         }
       }
     }
-    document.getElementById("js-edit-details").classList.remove('hidden')
+    show("#js-edit-details")
   })
-  var elements = document.getElementsByClassName('loading')
-  for (var i = 0; i < elements.length; i++) {
-    elements[i].classList.add('hidden')
-  }
+  hide('.loading')
   var elements = document.getElementsByClassName('show-after-loaded')
   for (var i = elements.length; i > 0 ; i--) {
     elements[0].classList.remove('show-after-loaded')

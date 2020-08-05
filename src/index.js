@@ -140,6 +140,7 @@ const main = async () => {
       }
     }
     document.getElementById('js-images').innerHTML = imageHTML;
+    document.getElementById('seller-address').innerHTML = oya.json.author;
 
     // Update product details & js-extra-details
     document.getElementById("js-extra-details").innerHTML = ''

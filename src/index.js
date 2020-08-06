@@ -160,7 +160,7 @@ const main = async () => {
     var elements = document.getElementsByClassName('js-last-updated')
     if (elements.length) {
       for (var i = 0; i < elements.length; i++) {
-        elements[i].innerHTML = new Date(oya.json.date)
+        elements[i].innerHTML = new Date(oya.json.date).toUTCString();
       }
     }
     document.getElementById('js-product-cid').innerHTML = oya.json_cid;

@@ -144,6 +144,11 @@ const main = async () => {
 
     // Update product details & js-extra-details
     document.getElementById("js-extra-details").innerHTML = ''
+    const total = parseFloat(details.Price) + parseFloat(details['shipping-price'])
+    var elements = document.getElementsByClassName(`js-details-total-price`)
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].innerHTML = total
+    }
     for (let [name, value] of Object.entries(details)) {
       var elements = document.getElementsByClassName(`js-details-${name}`)
       if (elements.length) {
@@ -158,16 +163,22 @@ const main = async () => {
       }
     }
     var elements = document.getElementsByClassName('js-last-updated')
-    if (elements.length) {
-      for (var i = 0; i < elements.length; i++) {
-        elements[i].innerHTML = new Date(oya.json.date).toUTCString();
-      }
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].innerHTML = new Date(oya.json.date).toUTCString();
     }
-    document.getElementById('js-product-cid').innerHTML = oya.json_cid;
+    var elements = document.getElementsByClassName('js-product-cid')
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].innerHTML = oya.json_cid;
+    }
+    // TODO - add permalink to this product listing on order confirmation page
     if (oya.eth_address == oya.json.author) {
       show('.can-edit')
     } else {
       show('.can-buy')
+      var elements = document.getElementsByClassName('js-seller-eth-address')
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].innerHTML = oya.json.author;
+      }
     }
   }
   const loadJSON = async (success, error) => {

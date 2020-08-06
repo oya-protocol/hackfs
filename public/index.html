@@ -72,7 +72,8 @@
               </div>
               <div id="w-node-1bdebc2a0abf-d7d16cbb" class="text-product-price">
                 Shipping
-              </div class="hidden can-buy"><a id="w-node-f7bcde35c9d1-d7d16cbb" href="#" class="button-main-cta w-button">Buy Now</a>
+              </div>
+              <a id="w-node-f7bcde35c9d1-d7d16cbb" href="#" class="button-main-cta w-button hidden can-buy">Buy Now</a>
               <div class="text-product-detail-store full-width hidden can-buy">
                 You will be prompted to authorize your account.
               </div>
@@ -80,7 +81,7 @@
                 Last updated: <span class="js-last-updated"></span>
               </div>
               <div class="full-width">
-                CID: <span id="js-product-cid"></span>
+                CID: <span class="js-product-cid"></span>
               </div>
               <button id="edit-product" class="full-width hidden can-edit">Edit this product listing</button>
               <div id='block-number'></div>
@@ -168,6 +169,81 @@
         <h3>Click the button below to give us access so you can list products</h3>
         <div>
           <button id="enable-metamask" style="font-size: 20px;padding:10px 20px;background-color:lightgreen;border-radius:10px;margin:40px 0">Enable MetaMask for OYA</button>
+        </div>
+      </div>
+      <div id="js-order-confirmation hidden" class="w-commerce-commerceorderconfirmationcontainer">
+        <div class="w-commerce-commercelayoutmain">
+          <div class="w-commerce-commercecheckoutcustomerinfosummarywrapper">
+            <h1 style="margin:0 9px 15px">Order Confirmation</h1>
+            <div class="w-commerce-commercelayoutsidebar">
+              <div class="w-commerce-commercecheckoutordersummarywrapper">
+                <div class="w-commerce-commercecheckoutsummaryblockheader">
+                  <h4>Order Summary</h4>
+                </div>
+                <fieldset class="w-commerce-commercecheckoutblockcontent">
+                  <div>
+                    <h4 class="js-details-Title">Product Title</h4>
+                  </div>
+                  <div class="w-commerce-commercecheckoutsummarylineitem">
+                    <div>
+                      Price
+                    </div>
+                    <div>
+                      <img src="img/Dai_yellow.png" alt="" class="image-dai-yellow small">
+                      <span class="js-details-Price">-</span> Dai
+                    </div>
+                  </div>
+                  <div class="w-commerce-commercecheckoutsummarylineitem">
+                    <div>
+                      Shipping
+                    </div>
+                    <div>
+                      <img src="img/Dai_yellow.png" alt="" class="image-dai-yellow small">
+                      <span class="js-details-shipping-price">-</span> Dai
+                    </div>
+                  </div>
+                  <div class="w-commerce-commercecheckoutsummarylineitem">
+                    <div style="font-weight:bold">Total</div>
+                    <div style="font-weight:bold">
+                      <img src="img/Dai_yellow.png" alt="" class="image-dai-yellow small">
+                      <span class="js-details-total-price">-</span> Dai
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+          <div class="w-commerce-commercecheckoutpaymentsummarywrapper">
+            <div class="w-commerce-commercecheckoutsummaryblockheader">
+              <h4>Payment Info</h4>
+            </div>
+            <fieldset class="w-commerce-commercecheckoutblockcontent">
+              <div class="w-commerce-commercecheckoutrow">
+                <div class="w-commerce-commercecheckoutcolumn">
+                  <div class="w-commerce-commercecheckoutsummaryitem"><label class="w-commerce-commercecheckoutsummarylabel">Buyer Address</label>
+                    <div class="w-commerce-commercecheckoutsummaryflexboxdiv js-buyer-eth-address">
+                    </div>
+                  </div>
+                </div>
+                <div class="w-commerce-commercecheckoutcolumn">
+                  <div class="w-commerce-commercecheckoutsummaryitem"><label class="w-commerce-commercecheckoutsummarylabel">Seller Address</label>
+                    <div class="w-commerce-commercecheckoutsummaryflexboxdiv">
+                      <div class="w-commerce-commercecheckoutsummarytextspacingondiv js-seller-eth-address">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="w-commerce-commercecheckoutorderitemswrapper">
+            <div class="w-commerce-commercecheckoutsummaryblockheader">
+              <h4>Order Contract Details</h4>
+            </div>
+            <fieldset class="w-commerce-commercecheckoutblockcontent">
+              <div>Product CID: <span class="js-product-cid"></span></div>
+            </fieldset>
+          </div>
         </div>
       </div>
     </div>

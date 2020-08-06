@@ -3440,3 +3440,17 @@ label {
     grid-row-start: 1;
   }
 }
+
+/* post-weblow styles */
+
+#seller-address {
+  padding-top: 14px;
+}
+
+#js-extra-details {
+  padding-left: 0;
+}
+
+#js-extra-details li {
+  list-style-type: none;
+}

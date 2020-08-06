@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
-      OYA - product
+      Oya Product Listings
     </title>
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="css/normalize.css" rel="stylesheet" type="text/css">
@@ -12,6 +12,7 @@
     <link href="css/oya.css" rel="stylesheet" type="text/css">
     <link href="filepond.css" rel="stylesheet" type="text/css">
     <link href="filepond-plugin-image-preview.css" rel="stylesheet" type="text/css">
+    <link rel='icon' href='./logo-black.ico' type='image/x-icon'/>
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
     <script type="text/javascript">
     WebFont.load({google:{families:["Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic"]}});
@@ -45,10 +46,9 @@
             <div class="div-seller-info">
               <img src="img/User.png" width="55" id="w-node-5a2e50904637-d7d16cbb" alt="" class="image-seller-profile">
               <div id="w-node-fc911287970e-d7d16cbb" class="text-product-detail-store">
-                Seller's store name
+                <p class="text-product-detail js-details-store"></p>
               </div>
-              <div id="w-node-c46528198390-d7d16cbb" class="text-product-seller-name">
-                Seller Name
+              <div id="seller-address">
               </div>
             </div>
             <div style="padding:20px 10px">
@@ -58,13 +58,13 @@
               <div class="div-product-price-detail">
                 <img src="img/Dai_yellow.png" alt="" class="image-dai-yellow">
                 <div class="text-product-price-number">
-                  <span class="js-details-Price">-</span> Dai.
+                  <span class="js-details-Price">-</span> Dai
                 </div>
               </div>
               <div class="div-product-price-detail">
                 <img src="img/Dai_yellow.png" alt="" class="image-dai-yellow small">
                 <div class="text-product-price-number shipping">
-                  <span class="js-details-shipping-price">-</span> Dai.
+                  <span class="js-details-shipping-price">-</span> Dai
                 </div>
               </div>
               <div id="w-node-346bc2401b9c-d7d16cbb" class="text-product-price">
@@ -78,6 +78,9 @@
               </div>
               <div class="full-width">
                 Last updated: <span class="js-last-updated"></span>
+              </div>
+              <div class="full-width">
+                CID: <span id="js-product-cid"></span>
               </div>
               <button id="edit-product" class="full-width hidden can-edit">Edit this product listing</button>
               <div id='block-number'></div>
@@ -102,7 +105,9 @@
             <div class="product-detail">
               <h3 class="heading-4">
                 Listing Detail
-              </h3><label for="Title" class="field-label">Titile</label><input type="text" class="text-field-2 w-input" maxlength="256" name="Title" data-name="Product Title" placeholder="Enter product title" id="Title" required=""><label for="description" class="field-label">Description</label>
+              </h3>
+              <label for="Store Name" class="field-label">Store Name</label><input type="text" class="text-field-2 w-input" maxlength="256" name="Store" data-name="Store Name" placeholder="Enter store name" id="Store-Name" required="">
+              <label for="Title" class="field-label">Title</label><input type="text" class="text-field-2 w-input" maxlength="256" name="Title" data-name="Product Title" placeholder="Enter product title" id="Title" required=""><label for="description" class="field-label">Description</label>
               <textarea placeholder="Enter product description here" maxlength="5000" id="description" name="description" data-name="Product description" required="" class="w-input"></textarea> <label for="Price" class="field-label">Price</label><input type="number" class="text-field-2 w-input" maxlength="256" name="Price" data-name="Product Price" placeholder="Enter price per unit" id="Price" required=""><!-- <label for="Availible-quantity" class="field-label">Available Quantity</label><input type="number" class="text-field-2 w-input" maxlength="256" name="Availible-quantity" data-name="Availible quantity" placeholder="0" id="Availible-quantity" required=""> -->
             </div>
             <div class="product-detail">
@@ -116,7 +121,7 @@
             <div class="product-detail">
               <h3 class="heading-4">
                 Shipping Detail
-              </h3><label class="w-checkbox checkbox-field"><input type="checkbox" id="physical-product" name="physical-product" data-name="Checkbox" class="w-checkbox-input"><span class="checkbox-label w-form-label">This is a physical product</span></label><label for="shipping-price" class="field-label">Shipping Price</label><input id="shipping-price" class="text-field-2 w-input" name="shipping-price" data-name="Shipping Price" required="" type="number"><label for="Zipcode" class="field-label">Origin zip code</label><input type="text" class="text-field-2 w-input" maxlength="256" name="Zipcode" data-name="Zipcode" placeholder="12345" id="Zipcode"><label for="processing-time" class="field-label">Processing time</label><select id="processing-time" name="processing-time" data-name="Processing time" class="select-field w-select">
+              </h3><label class="w-checkbox checkbox-field"><input type="checkbox" id="physical-product" name="Physical Product" data-name="Checkbox" class="w-checkbox-input"><span class="checkbox-label w-form-label">This is a physical product</span></label><label for="shipping-price" class="field-label">Shipping Price</label><input id="shipping-price" class="text-field-2 w-input" name="shipping-price" data-name="Shipping Price" required="" type="number"><label for="Zipcode" class="field-label">Origin zip code</label><input type="text" class="text-field-2 w-input" maxlength="256" name="Zipcode" data-name="Zipcode" placeholder="12345" id="Zipcode"><label for="processing-time" class="field-label">Processing time</label><select id="processing-time" name="Processing Time" data-name="Processing time" class="select-field w-select">
                 <option value="">
                   Selecting your processing time...
                 </option>

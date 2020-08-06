@@ -140,6 +140,7 @@ const main = async () => {
       }
     }
     document.getElementById('js-images').innerHTML = imageHTML;
+    document.getElementById('seller-address').innerHTML = oya.json.author;
 
     // Update product details & js-extra-details
     document.getElementById("js-extra-details").innerHTML = ''
@@ -159,9 +160,10 @@ const main = async () => {
     var elements = document.getElementsByClassName('js-last-updated')
     if (elements.length) {
       for (var i = 0; i < elements.length; i++) {
-        elements[i].innerHTML = new Date(oya.json.date)
+        elements[i].innerHTML = new Date(oya.json.date).toUTCString();
       }
     }
+    document.getElementById('js-product-cid').innerHTML = oya.json_cid;
     if (oya.eth_address == oya.json.author) {
       show('.can-edit')
     } else {

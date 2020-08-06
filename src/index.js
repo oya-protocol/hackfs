@@ -1,4 +1,4 @@
-// TODO - set up dyamic import?
+// TODO - set up automatic image resizing?
 // import browserImageSize from 'browser-image-size' // TODO - set this up
 import * as FilePond from 'filepond';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';

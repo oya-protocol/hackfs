@@ -174,6 +174,28 @@ const main = async () => {
     if (oya.eth_address == oya.json.author) {
       show('.can-edit')
     } else {
+      document.getElementById("buy-now-button").addEventListener('click', async function (e) {
+        e.preventDefault();
+        if (typeof web3 === 'undefined') {
+          alert('Metamask must be installed to buy a product')
+          show("#js-install-metamask")
+          window.scroll(0,0)
+          return
+        }
+        var buyerEthAddr = await getEthAddress()
+        if (!buyerEthAddr) {
+          const result = await oya.provider.provider.request({ method: 'eth_requestAccounts' });
+          if (result) {
+            buyerEthAddr = result[0]
+          }
+        }
+        var elements = document.getElementsByClassName('js-buyer-eth-address')
+        for (var i = 0; i < elements.length; i++) {
+          elements[i].innerHTML = buyerEthAddr;
+        }
+        hide("#js-product-details")
+        show("#js-order-confirmation")
+      })
       show('.can-buy')
       var elements = document.getElementsByClassName('js-seller-eth-address')
       for (var i = 0; i < elements.length; i++) {

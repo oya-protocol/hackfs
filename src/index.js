@@ -194,6 +194,28 @@ const main = async () => {
           alert('Oops, something went wrong, please try again later.')
         })
       })
+      document.getElementById('pinata-button').addEventListener('click', async function (e) {
+        var thisButton = this
+        thisButton.querySelector('.loading-image').classList.remove('hidden')
+        const hash = 'bafkreibplgu6qfsnckpltauoj35dj7fpzp7betqv3dnz43hniptqughkf4'
+        const response = await fetch("https://api.pinata.cloud/pinning/pinByHash", {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+            "pinata_api_key": "e2415f29dee020d283b0",
+            "pinata_secret_api_key": "c9370a318e8f3d4ee240f464cd49beb6f0ca8fc4ca3584e1ebb78a852c41d334"
+          },
+          body: JSON.stringify({hashToPin:oya.json_cid})
+        });
+        if (response.status == 200) {
+          thisButton.classList.add('loaded')
+          thisButton.querySelector('.loading-image').classList.add('hidden')
+        } else {
+          thisButton.classList.add('error')
+          thisButton.querySelector('.loading-image').classList.add('hidden')
+        }
+      })
       show('.can-edit')
     } else {
       document.getElementById("buy-now-button").addEventListener('click', async function (e) {

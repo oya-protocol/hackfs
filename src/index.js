@@ -13,7 +13,9 @@ const main = async () => {
     if (typeof web3 === 'undefined') {
       return
     }
-    oya.provider = new ethers.providers.Web3Provider(web3.currentProvider);
+    oya.provider = new ethers.providers.Web3Provider(web3.currentProvider)
+    oya.signer = oya.provider.getSigner()
+    console.log(oya.signer)
     return oya.provider.provider.selectedAddress
   };
 

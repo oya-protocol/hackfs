@@ -238,7 +238,7 @@ const main = async () => {
 
   } else { // Adding new product listing
     hide("#js-product-details")
-    oya.eth_address = getEthAddress()
+    oya.eth_address = await getEthAddress()
     if (oya.eth_address) {
       loadFormInterface()
       document.getElementById('submit-form-button').value = 'Preview'

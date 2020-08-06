@@ -9,7 +9,7 @@ import { ethers } from "ethers";
         // console.log( oya.buckets.archive(oya.bucketKey))
 
 const main = async () => {
-  const getEthAddress = () => {
+  const getEthAddress = async () => {
     if (typeof web3 === 'undefined') {
       return
     }

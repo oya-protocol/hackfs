@@ -3439,11 +3439,17 @@ label {
   width: 100%;
   margin: 9px 0;
   height: 56px;
+  background-color: #f5fbfe;
+  border-radius: 10px;
+  border: 2px solid;
 }
 
 button.loaded {
   background-color: #7E7;
-  border: 2px solid;
+  border-width: 3px;
+}
+button.error {
+  background-color: #FDD;
 }
 
 .publish-button img {

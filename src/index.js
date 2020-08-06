@@ -172,17 +172,22 @@ const main = async () => {
     }
     // TODO - add permalink to this product listing on order confirmation page
     if (oya.eth_address == oya.json.author) {
-      var elements = document.getElementsByClassName('publish-button')
-      for (var i = 0; i < elements.length; i++) {
-        elements[i].addEventListener('click', function (e) {
-          var thisButton = this
-          thisButton.querySelector('.loading-image').classList.remove('hidden')
-          setTimeout(function () {
-            thisButton.classList.add('loaded')
-            thisButton.querySelector('.loading-image').classList.add('hidden')
-          }, 3500)
-        })
-      }
+      document.getElementById('powergate-button').addEventListener('click', function (e) {
+        var thisButton = this
+        thisButton.querySelector('.loading-image').classList.remove('hidden')
+        setTimeout(function () {
+          thisButton.classList.add('loaded')
+          thisButton.querySelector('.loading-image').classList.add('hidden')
+        }, 3500)
+      })
+      document.getElementById('pinata-button').addEventListener('click', function (e) {
+        var thisButton = this
+        thisButton.querySelector('.loading-image').classList.remove('hidden')
+        setTimeout(function () {
+          thisButton.classList.add('loaded')
+          thisButton.querySelector('.loading-image').classList.add('hidden')
+        }, 3500)
+      })
       show('.can-edit')
     } else {
       document.getElementById("buy-now-button").addEventListener('click', async function (e) {

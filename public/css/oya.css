@@ -3434,3 +3434,14 @@ label {
 #js-extra-details li {
   list-style-type: none;
 }
+
+.edit-button {
+  width: 100%;
+  margin: 9px 0;
+  height: 56px;
+}
+
+button.loaded {
+  background-color: #7E7;
+  border: 2px solid;
+}

@@ -172,6 +172,17 @@ const main = async () => {
     }
     // TODO - add permalink to this product listing on order confirmation page
     if (oya.eth_address == oya.json.author) {
+      var elements = document.getElementsByClassName('publish-button')
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].addEventListener('click', function (e) {
+          var thisButton = this
+          thisButton.querySelector('.loading-image').classList.remove('hidden')
+          setTimeout(function () {
+            thisButton.classList.add('loaded')
+            thisButton.querySelector('.loading-image').classList.add('hidden')
+          }, 3500)
+        })
+      }
       show('.can-edit')
     } else {
       document.getElementById("buy-now-button").addEventListener('click', async function (e) {
@@ -246,6 +257,7 @@ const main = async () => {
 
   var oya = {json:{paths:[]}};
   oya.buckets = await getBuckets()
+  oya.eth_address = getEthAddress()
   var url_hash = new URL(document.URL).hash
   const queryString = window.location.search;
   if (url_hash.length > 1) {
@@ -270,7 +282,6 @@ const main = async () => {
 
   } else { // Adding new product listing
     hide("#js-product-details")
-    oya.eth_address = getEthAddress()
     if (oya.eth_address) {
       loadFormInterface()
       document.getElementById('submit-form-button').value = 'Preview'

@@ -5,9 +5,6 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { ethers } from "ethers";
 
-        // TODO - set this up when textile gets things working
-        // console.log( oya.buckets.archive(oya.bucketKey))
-
 const main = async () => {
   const getEthAddress = () => {
     if (typeof web3 === 'undefined') {
@@ -183,6 +180,20 @@ const main = async () => {
           }, 3500)
         })
       }
+      document.getElementById("powergate-button").addEventListener('click', async function (e) {
+        var thisButton = this
+        thisButton.querySelector('.loading-image').classList.remove('hidden')
+        thisButton.classList.remove('error')
+        oya.buckets.archive(oya.bucketKey).then(function () {
+          thisButton.classList.add('loaded')
+          thisButton.querySelector('.loading-image').classList.add('hidden')
+        }).catch(function (e) {
+          console.error(e)
+          thisButton.querySelector('.loading-image').classList.add('hidden')
+          thisButton.classList.add('error')
+          alert('Oops, something went wrong, please try again later.')
+        })
+      })
       show('.can-edit')
     } else {
       document.getElementById("buy-now-button").addEventListener('click', async function (e) {

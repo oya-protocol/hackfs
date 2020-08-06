@@ -1,4 +1,4 @@
-// TODO - set up dyamic import?
+// TODO - set up automatic image resizing?
 // import browserImageSize from 'browser-image-size' // TODO - set this up
 import * as FilePond from 'filepond';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
@@ -47,7 +47,7 @@ const main = async () => {
   }
   const formToJSON = elements => [].reduce.call(elements, (data, element) => {
     if (element.name.length && element.value.length && element.name != 'filepond') {
-      data[element.name] = element.type == "checkbox" ? element.checked : element.value;
+      data[element.name] = element.type == "checkbox" ? (element.checked ? 'Yes' : 'No') : element.value;
     }
     return data;
   }, {});
@@ -263,7 +263,7 @@ const main = async () => {
       var inputs = document.getElementsByName(name);
       for (var i = 0; i < inputs.length; i++) {
         if (inputs[i].type == "checkbox") {
-          inputs[i].checked = value;
+          inputs[i].checked = value == 'Yes';
         } else {
           inputs[i].value = value
         }

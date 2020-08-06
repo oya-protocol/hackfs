@@ -163,6 +163,7 @@ const main = async () => {
         elements[i].innerHTML = new Date(oya.json.date)
       }
     }
+    document.getElementById('js-product-cid').innerHTML = oya.json_cid;
     if (oya.eth_address == oya.json.author) {
       show('.can-edit')
     } else {

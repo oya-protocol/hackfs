@@ -3445,3 +3445,7 @@ button.loaded {
   background-color: #7E7;
   border: 2px solid;
 }
+
+.publish-button img {
+  max-height: 80%;
+}

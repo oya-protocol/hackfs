@@ -169,17 +169,6 @@ const main = async () => {
     }
     // TODO - add permalink to this product listing on order confirmation page
     if (oya.eth_address == oya.json.author) {
-      var elements = document.getElementsByClassName('publish-button')
-      for (var i = 0; i < elements.length; i++) {
-        elements[i].addEventListener('click', function (e) {
-          var thisButton = this
-          thisButton.querySelector('.loading-image').classList.remove('hidden')
-          setTimeout(function () {
-            thisButton.classList.add('loaded')
-            thisButton.querySelector('.loading-image').classList.add('hidden')
-          }, 3500)
-        })
-      }
       document.getElementById("powergate-button").addEventListener('click', async function (e) {
         var thisButton = this
         thisButton.querySelector('.loading-image').classList.remove('hidden')
@@ -200,7 +189,6 @@ const main = async () => {
         const hash = 'bafkreibplgu6qfsnckpltauoj35dj7fpzp7betqv3dnz43hniptqughkf4'
         const response = await fetch("https://api.pinata.cloud/pinning/pinByHash", {
           method: 'POST',
-          mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
             "pinata_api_key": "e2415f29dee020d283b0",

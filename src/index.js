@@ -9,13 +9,12 @@ import { ethers } from "ethers";
         // console.log( oya.buckets.archive(oya.bucketKey))
 
 const main = async () => {
-  const getEthAddress = async () => {
+  const getEthAddress = () => {
     if (typeof web3 === 'undefined') {
       return
     }
-    oya.provider = new ethers.providers.Web3Provider(web3.currentProvider)
-    oya.signer = await oya.provider.getSigner()
-    return await oya.signer.getAddress()
+    oya.provider = new ethers.providers.Web3Provider(web3.currentProvider);
+    return oya.provider.provider.selectedAddress
   };
 
   /**
@@ -238,7 +237,7 @@ const main = async () => {
 
   } else { // Adding new product listing
     hide("#js-product-details")
-    oya.eth_address = await getEthAddress()
+    oya.eth_address = getEthAddress()
     if (oya.eth_address) {
       loadFormInterface()
       document.getElementById('submit-form-button').value = 'Preview'

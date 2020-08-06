@@ -15,7 +15,7 @@ const main = async () => {
     }
     oya.provider = new ethers.providers.Web3Provider(web3.currentProvider)
     oya.signer = oya.provider.getSigner()
-    console.log(oya.signer)
+    console.log(oya.signer.getAddress())
     return oya.provider.provider.selectedAddress
   };
 

@@ -38,6 +38,7 @@ const main = async () => {
       productDetails: productDetails
     }
     var results = await oya.buckets.pushPath(oya.bucketKey, 'index.json', JSON.stringify(details,null,2))
+    // TODO - if the CID changed, wipe out the success class on pinata & filecoin buttons
     oya.json_cid = results.path.cid.string
     oya.json = details
   }
@@ -97,6 +98,7 @@ const main = async () => {
       oya.buckets.removePath(oya.bucketKey, `photos/${fileName}`)
     });
     document.getElementById('cancel-button').addEventListener('click', function (e) {
+      e.preventDefault();
       hide("#js-edit-details")
       loadProduct()
       show("#js-product-details")
@@ -187,14 +189,19 @@ const main = async () => {
             "pinata_secret_api_key": "c9370a318e8f3d4ee240f464cd49beb6f0ca8fc4ca3584e1ebb78a852c41d334"
           },
           body: JSON.stringify({hashToPin:oya.json_cid})
-        });
-        if (response.status == 200) {
-          thisButton.classList.add('loaded')
-          thisButton.querySelector('.loading-image').classList.add('hidden')
-        } else {
+        }).then(function (response) {
+          if (response.status == 200) {
+            thisButton.classList.add('loaded')
+            thisButton.querySelector('.loading-image').classList.add('hidden')
+          } else {
+            thisButton.classList.add('error')
+            thisButton.querySelector('.loading-image').classList.add('hidden')
+          }
+        }).catch(function (e) {
+          console.error(e)
           thisButton.classList.add('error')
           thisButton.querySelector('.loading-image').classList.add('hidden')
-        }
+        });
       })
       show('.can-edit')
     } else {
@@ -302,13 +309,18 @@ const main = async () => {
           throw new Error('Failed to open bucket')
         }
         oya.bucketKey = root.key
-        const ipfs_path = await oya.buckets.listIpfsPath(`/ipns/${oya.bucketKey}/index.json`)
-        console.log(ipfs_path)
+        oya.buckets.listIpfsPath(`/ipns/${oya.bucketKey}/index.json`).then(function () {
+          // bucket already exists, load it
+          window.location.hash = `#${oya.bucketKey}`
+          location.reload() // TODO - display info w/o redirect
+        }).catch(function (e) {
+          console.log('info', e.message) // no JSON file found, create a new product
+          loadFormInterface()
+          document.getElementById('submit-form-button').value = 'Preview'
+          show("#js-edit-details")
+          show(".addProduct")
+        })
       }
-      loadFormInterface()
-      document.getElementById('submit-form-button').value = 'Preview'
-      show("#js-edit-details")
-      show(".addProduct")
     } else {
       if (typeof web3 === 'undefined') {
         show("#js-install-metamask")

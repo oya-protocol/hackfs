@@ -1,6 +1,7 @@
-# New Project
+# Oya Decentralized Product Listings
 
 > ✨ Bootstrapped with Create Snowpack App (CSA).
+> Built during ETHGlobal HackFS.
 
 ## Available Scripts
 

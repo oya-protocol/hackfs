@@ -74,6 +74,7 @@ const main = async () => {
     })
   }
   const loadFormInterface = async () => {
+    oya.buckets.open(oya.eth_address)
     hide('.loading')
     var files = []
     if (oya.json && oya.json.paths && oya.json.paths.length) {
@@ -111,6 +112,11 @@ const main = async () => {
       upLoadMetaData(data).then(function () {
         window.location.hash = `#${oya.bucketKey}`
         hide("#js-edit-details")
+        var elements = document.getElementsByClassName('edit-button')
+        for (var i = 0; i < elements.length; i++) {
+          elements[i].classList.remove('error')
+          elements[i].classList.remove('loaded')
+        }
         loadProduct()
         show("#js-product-details")
         hide('.addProduct')
@@ -162,6 +168,8 @@ const main = async () => {
     for (var i = 0; i < elements.length; i++) {
       elements[i].innerHTML = oya.json_cid;
     }
+  }
+  const loadButtons = () => {
     // TODO - add permalink to this product listing on order confirmation page
     if (oya.eth_address == oya.json.author) {
       document.getElementById("powergate-button").addEventListener('click', async function (e) {
@@ -197,11 +205,13 @@ const main = async () => {
           } else {
             thisButton.classList.add('error')
             thisButton.querySelector('.loading-image').classList.add('hidden')
+            alert('Oops, something went wrong, please try again later.')
           }
         }).catch(function (e) {
           console.error(e)
           thisButton.classList.add('error')
           thisButton.querySelector('.loading-image').classList.add('hidden')
+          alert('Oops, something went wrong, please try again later.')
         });
       })
       show('.can-edit')
@@ -214,16 +224,15 @@ const main = async () => {
           window.scroll(0,0)
           return
         }
-        var buyerEthAddr = await getEthAddress()
-        if (!buyerEthAddr) {
+        if (!oya.eth_address) {
           const result = await oya.provider.provider.request({ method: 'eth_requestAccounts' });
           if (result) {
-            buyerEthAddr = result[0]
+            oya.eth_address = result[0]
           }
         }
         var elements = document.getElementsByClassName('js-buyer-eth-address')
         for (var i = 0; i < elements.length; i++) {
-          elements[i].innerHTML = buyerEthAddr;
+          elements[i].innerHTML = oya.eth_address;
         }
         hide("#js-product-details")
         show("#js-order-confirmation")
@@ -281,11 +290,19 @@ const main = async () => {
   oya.eth_address = getEthAddress()
   var url_hash = new URL(document.URL).hash
   const queryString = window.location.search;
+  var elements = document.getElementsByClassName('enable-metamask')
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].addEventListener('click', async function (e) {
+      await oya.provider.provider.request({ method: 'eth_requestAccounts' });
+      location.reload()
+    })
+  }
   if (url_hash.length > 1) {
     [oya.bucketKey, oya.json_cid] = url_hash.slice(1).split('/')
     // TODO - check to see if CIDs match and show a warning
     if (!oya.json_cid) {
       const ipfs_path = await oya.buckets.listIpfsPath(`/ipns/${oya.bucketKey}/index.json`)
+      console.log('blarf')
       oya.json_cid = ipfs_path.cid
     }
     await loadJSON(function (json) {
@@ -295,6 +312,7 @@ const main = async () => {
       }
       oya.json = json
       oya.json.paths = oya.json.paths || []
+      loadButtons()
       loadProduct()
       loadFormInterface()
     }, function () {
@@ -320,6 +338,7 @@ const main = async () => {
           document.getElementById('submit-form-button').value = 'Preview'
           show("#js-edit-details")
           show(".addProduct")
+          loadButtons()
         })
       }
     } else {
@@ -327,10 +346,6 @@ const main = async () => {
         hide('.loading')
         show("#js-install-metamask")
       } else {
-        document.getElementById('enable-metamask').addEventListener('click', async function (e) {
-          await oya.provider.provider.request({ method: 'eth_requestAccounts' });
-          location.reload()
-        })
         hide('.loading')
         show("#js-enable-metamask")
       }
@@ -354,6 +369,18 @@ const main = async () => {
   var elements = document.getElementsByClassName('show-after-loaded')
   for (var i = elements.length; i > 0 ; i--) {
     elements[0].classList.remove('show-after-loaded')
+  }
+  if (typeof web3 !== 'undefined') {
+    if (oya.eth_address) {
+      show('#logged-in')
+      var elements = document.getElementsByClassName('js-buyer-eth-address')
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].innerHTML = `...${oya.eth_address.slice(-7)}`;
+      }
+    } else {
+      show('#logged-out')
+    }
+    show('#login-nav')
   }
 };
 main();

@@ -21,11 +21,16 @@
   <body class="body-big">
     <div data-collapse="small" data-animation="default" data-duration="400" role="banner" class="navbar-2 simplified navbar-3 w-nav">
       <div class="container-navbar w-container">
-        <!-- <nav role="navigation" id="w-node-8e7318b202ed-6728cfd6" class="nav-menu w-nav-menu">
+        <nav role="navigation" id="login-nav" class="nav-menu w-nav-menu hidden">
         <div class="div-login-info"><img src="img/User.png" alt="" class="image-user-login">
-          <div class="text-product-seller-name logintext">User Name</div>
+          <div id="logged-in" class="text-product-seller-name logintext hidden">
+            Logged&nbsp;In&nbsp;as: <span class="js-buyer-eth-address"></span>
+          </div>
+          <div id="logged-out" class="text-product-seller-name logintext hidden">
+            <button class="enable-metamask" style="background-color:#000">Log In</button>
+          </div>
         </div>
-      </nav> -->
+      </nav>
         <a href="https://oya.market" id="w-node-81786728cfe6-6728cfd6" class="brand w-nav-brand"><img src="img/OYA-logo-500.png" width="244" alt="" class="image-heading-brand"></a> <!-- <div id="w-node-3d982606ced3-6728cfd6" class="menu-button w-nav-button">
         <div class="icon w-icon-nav-menu"></div>
       </div> -->
@@ -177,7 +182,7 @@
         <br />
         <h3>Click the button below to give us access so you can list products</h3>
         <div>
-          <button id="enable-metamask" style="font-size: 20px;padding:10px 20px;background-color:lightgreen;border-radius:10px;margin:40px 0">Enable MetaMask for OYA</button>
+          <button class="enable-metamask" style="font-size: 20px;padding:10px 20px;background-color:lightgreen;border-radius:10px;margin:40px 0">Enable MetaMask for OYA</button>
         </div>
       </div>
       <div id="js-order-confirmation" class="w-commerce-commerceorderconfirmationcontainer hidden">

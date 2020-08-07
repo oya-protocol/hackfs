@@ -3123,7 +3123,7 @@ label {
   }
 }
 
-#w-node-8e7318b202ed-6728cfd6 {
+#login-nav {
   -ms-grid-column-span: 1;
   grid-column-end: 4;
   -ms-grid-column: 3;
@@ -3337,7 +3337,7 @@ label {
 }
 
 @media screen and (max-width: 991px) {
-  #w-node-8e7318b202ed-6728cfd6 {
+  #login-nav {
     -ms-grid-column-span: 3;
     grid-column-end: 4;
     -ms-grid-column: 1;

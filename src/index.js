@@ -74,6 +74,7 @@ const main = async () => {
     })
   }
   const loadFormInterface = async () => {
+    hide('.loading')
     var files = []
     if (oya.json && oya.json.paths && oya.json.paths.length) {
       files = oya.json.paths.map(function (path) {
@@ -323,12 +324,14 @@ const main = async () => {
       }
     } else {
       if (typeof web3 === 'undefined') {
+        hide('.loading')
         show("#js-install-metamask")
       } else {
         document.getElementById('enable-metamask').addEventListener('click', async function (e) {
           await oya.provider.provider.request({ method: 'eth_requestAccounts' });
           location.reload()
         })
+        hide('.loading')
         show("#js-enable-metamask")
       }
     }
@@ -348,7 +351,6 @@ const main = async () => {
     }
     show("#js-edit-details")
   })
-  hide('.loading')
   var elements = document.getElementsByClassName('show-after-loaded')
   for (var i = elements.length; i > 0 ; i--) {
     elements[0].classList.remove('show-after-loaded')

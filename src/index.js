@@ -302,7 +302,6 @@ const main = async () => {
     // TODO - check to see if CIDs match and show a warning
     if (!oya.json_cid) {
       const ipfs_path = await oya.buckets.listIpfsPath(`/ipns/${oya.bucketKey}/index.json`)
-      console.log('blarf')
       oya.json_cid = ipfs_path.cid
     }
     await loadJSON(function (json) {

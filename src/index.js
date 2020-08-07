@@ -73,14 +73,6 @@ const main = async () => {
     })
   }
   const loadFormInterface = async () => {
-    if (!oya.bucketKey) {
-      const root = await oya.buckets.open('oya.product')
-      if (!root) {
-        throw new Error('Failed to open bucket')
-      }
-      oya.bucketKey = root.key
-    }
-
     var files = []
     if (oya.json && oya.json.paths && oya.json.paths.length) {
       files = oya.json.paths.map(function (path) {
@@ -304,6 +296,15 @@ const main = async () => {
   } else { // Adding new product listing
     hide("#js-product-details")
     if (oya.eth_address) {
+      if (!oya.bucketKey) {
+        const root = await oya.buckets.open(oya.eth_address)
+        if (!root) {
+          throw new Error('Failed to open bucket')
+        }
+        oya.bucketKey = root.key
+        const ipfs_path = await oya.buckets.listIpfsPath(`/ipns/${oya.bucketKey}/index.json`)
+        console.log(ipfs_path)
+      }
       loadFormInterface()
       document.getElementById('submit-form-button').value = 'Preview'
       show("#js-edit-details")

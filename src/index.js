@@ -34,7 +34,7 @@ const main = async () => {
     return buckets
   }
 
-  const upLoadMetaData = async (productDetails) => {
+  const uploadMetadata = async (productDetails) => {
     const details = {
       author: oya.eth_address,
       date: (new Date()).getTime(),
@@ -117,7 +117,7 @@ const main = async () => {
       e.preventDefault();
       document.getElementById('submit-form-button').value = 'Loading...'
       const data = formToJSON(this.elements);
-      upLoadMetaData(data).then(function () {
+      uploadMetadata(data).then(function () {
         window.location.hash = `#${oya.bucketKey}`
         hide("#js-edit-details")
         loadProduct()

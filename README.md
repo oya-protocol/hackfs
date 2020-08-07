@@ -3,6 +3,8 @@
 > ✨ Bootstrapped with Create Snowpack App (CSA).
 > Built during ETHGlobal HackFS.
 
+Play with it live at https://oya.market/hackfs
+
 ## Available Scripts
 
 ### npm start

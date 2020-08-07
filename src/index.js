@@ -14,6 +14,10 @@ const main = async () => {
     return oya.provider.provider.selectedAddress
   };
 
+  const getSigner = async () => {
+    oya.signer = await oya.provider.getSigner()
+  };
+
   /**
    * getBuckets will create a new Buckets client with the UserAuth
    */

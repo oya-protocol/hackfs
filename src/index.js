@@ -5,9 +5,6 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import { ethers } from "ethers";
 
-        // TODO - set this up when textile gets things working
-        // console.log( oya.buckets.archive(oya.bucketKey))
-
 const main = async () => {
   const getEthAddress = () => {
     if (typeof web3 === 'undefined') {
@@ -172,21 +169,40 @@ const main = async () => {
     }
     // TODO - add permalink to this product listing on order confirmation page
     if (oya.eth_address == oya.json.author) {
-      document.getElementById('powergate-button').addEventListener('click', function (e) {
+      document.getElementById("powergate-button").addEventListener('click', async function (e) {
         var thisButton = this
         thisButton.querySelector('.loading-image').classList.remove('hidden')
-        setTimeout(function () {
+        thisButton.classList.remove('error')
+        oya.buckets.archive(oya.bucketKey).then(function () {
           thisButton.classList.add('loaded')
           thisButton.querySelector('.loading-image').classList.add('hidden')
-        }, 3500)
+        }).catch(function (e) {
+          console.error(e)
+          thisButton.querySelector('.loading-image').classList.add('hidden')
+          thisButton.classList.add('error')
+          alert('Oops, something went wrong, please try again later.')
+        })
       })
-      document.getElementById('pinata-button').addEventListener('click', function (e) {
+      document.getElementById('pinata-button').addEventListener('click', async function (e) {
         var thisButton = this
         thisButton.querySelector('.loading-image').classList.remove('hidden')
-        setTimeout(function () {
+        const hash = 'bafkreibplgu6qfsnckpltauoj35dj7fpzp7betqv3dnz43hniptqughkf4'
+        const response = await fetch("https://api.pinata.cloud/pinning/pinByHash", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            "pinata_api_key": "e2415f29dee020d283b0",
+            "pinata_secret_api_key": "c9370a318e8f3d4ee240f464cd49beb6f0ca8fc4ca3584e1ebb78a852c41d334"
+          },
+          body: JSON.stringify({hashToPin:oya.json_cid})
+        });
+        if (response.status == 200) {
           thisButton.classList.add('loaded')
           thisButton.querySelector('.loading-image').classList.add('hidden')
-        }, 3500)
+        } else {
+          thisButton.classList.add('error')
+          thisButton.querySelector('.loading-image').classList.add('hidden')
+        }
       })
       show('.can-edit')
     } else {

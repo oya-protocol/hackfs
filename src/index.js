@@ -326,7 +326,7 @@ const main = async () => {
         if (!root) {
           throw new Error('Failed to open bucket')
         }
-        oya.bucketKey = root.key
+        oya.bucketKey = root.root.key
         oya.buckets.listIpfsPath(`/ipns/${oya.bucketKey}/index.json`).then(function () {
           // bucket already exists, load it
           window.location.hash = `#${oya.bucketKey}`

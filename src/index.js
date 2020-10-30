@@ -19,10 +19,10 @@ const main = async () => {
    */
   const getBuckets = async () => {
     // TODO - pull this from somewhere else - this is the regular hub key
-    // const buckets = await textile.Buckets.withKeyInfo({key:'brqbnrvpihcdrdjh2japbkgd6mm'})
+    const buckets = await textile.Buckets.withKeyInfo({key:'brqbnrvpihcdrdjh2japbkgd6mm'})
 
     // When hub.next is working, use the API endpoint below w/ the hub.next key below
-    const buckets = await textile.Buckets.withKeyInfo({key:'brnyrzoniaaxmk27bgqe5synqq4'}, 'https://grpcweb.hub.next.textile.io')
+    // const buckets = await textile.Buckets.withKeyInfo({key:'brnyrzoniaaxmk27bgqe5synqq4'}, 'https://grpcweb.hub.next.textile.io')
     // Authorize the user and your insecure keys with getToken
     const identity = await threads.Libp2pCryptoIdentity.fromString('bbaareyccr6d67bras2r423xi3dkv4zj7ojijhxql7k3ljsxprrfiwcigs5xjbfwytt7vipbkiycztkl2shjs2xcbzy4jxyhdfciioq532b3ai3uqs3mjz72uhqvembmzvf5jduznlra44oe34drsreehio55a5qe')
     await buckets.getToken(identity)
